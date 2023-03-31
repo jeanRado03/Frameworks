@@ -62,7 +62,7 @@ public class Emp {
         this.salaire = salaire;
     }
     
-    @Url(path="/getAll")
+    @Url(path="getAll")
     public double getAll(){
         return this.getSalaire()+this.getId();
     }
