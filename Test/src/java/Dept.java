@@ -2,7 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
+
 import annotation.Url;
+import etu2014.framework.ModelView;
 /**
  *
  * @author rado
@@ -31,9 +33,14 @@ public class Dept {
         this.id = id;
         this.name = name;
     }
+
+    public Dept() {
+    }
     
-    @Url(path="urlmapping")
-    public void calc(){
-        int produit = this.getId()*2;
+    @Url(path="/dept-all")
+    public ModelView getDept(){
+        String view = "dept-all.jsp";
+        ModelView mv = new ModelView(view);
+        return mv;
     }
 }
