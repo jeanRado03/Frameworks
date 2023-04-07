@@ -24,12 +24,10 @@
                 </tr>
             </thead>
             <tbody>
-                <% for (int i = 0; i < dept.size(); i++) { %>
                     <tr>
-                        <td><% out.print(((Dept)dept.get(i)).getId()); %></td>
-                        <td><% out.print(((Dept)dept.get(i)).getName()); %></td>
+                        <td><% out.print(employer); %></td>
+                        <td><% out.print(((Dept)dept.get(0)).getId()); %></td>
                     </tr>
-                <% } %>
                     
         </table>
   </body>
