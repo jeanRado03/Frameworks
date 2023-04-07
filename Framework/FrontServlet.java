@@ -16,6 +16,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -44,12 +45,12 @@ public class FrontServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        String[] classeNames = this.getClassList("/home/rado/Bureau/Frameworktest/Temp/src/java");
+        String[] classeNames = this.getClassList();
         HashMap<String, Mapping> mappingurl = new HashMap<>();
         for(String classeName : classeNames){
             Class<?> classe = null;
             try {
-                classe = Class.forName(classeName);
+                classe = Class.forName("test."+classeName);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(FrontServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -71,9 +72,9 @@ public class FrontServlet extends HttpServlet {
     }
 
 
-     public static String[] getClassList(String directoryPath)
+     public static String[] getClassList()
     {
-        File file=new File(directoryPath);
+        File file=new File("/home/rado/Bureau/Frameworktest/Temp/src/java/test");
 
         File[] f=file.listFiles();
         FilenameFilter textFilefilter = new FilenameFilter(){
@@ -123,57 +124,35 @@ public class FrontServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String url = request.getServletPath();
         ModelView mv;
-        try {
-            mv = this.check(url);
-            RequestDispatcher dispatcher = request.getRequestDispatcher(mv.getView());
-            dispatcher.forward(request, response);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(FrontServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NoSuchMethodException ex) {
-            Logger.getLogger(FrontServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(FrontServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
-            Logger.getLogger(FrontServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvocationTargetException ex) {
-            Logger.getLogger(FrontServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UrlInconue ex) {
-            Logger.getLogger(FrontServlet.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            Logger.getLogger(FrontServlet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        /*try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code.
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet FrontServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>URL: etoo" + url + "</h1>");
-            try{
-                out.println("<h1>Method: " + this.check(url).getView() + "</h1>");
-            }
-            catch (ClassNotFoundException ex) {
-                out.print("ClassNotFoundException:"+ex.getMessage());
+        try (PrintWriter out = response.getWriter()) {
+            try {
+                mv = this.check(url);
+                RequestDispatcher dispatcher = request.getRequestDispatcher(mv.getView());
+                for (Map.Entry<String, Object> entry : mv.getData().entrySet()) {
+                    Object key = entry.getKey();
+                    Object val = entry.getValue();
+                    request.setAttribute("cle",(String)key);
+                    request.setAttribute((String)key,val);
+                }
+                dispatcher.forward(request, response);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(FrontServlet.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NoSuchMethodException ex) {
-                out.print("NoSuchMethodException:"+ex.getMessage());
-            } catch (InstantiationException ex) {
-                out.print("InstantiationException:"+ex.getMessage());
+                Logger.getLogger(FrontServlet.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IllegalAccessException ex) {
-                out.print("IllegalAccessException:"+ex.getMessage());
+                Logger.getLogger(FrontServlet.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IllegalArgumentException ex) {
-                out.print("IllegalArgumentException:"+ex.getMessage());
+                Logger.getLogger(FrontServlet.class.getName()).log(Level.SEVERE, null, ex);
             } catch (InvocationTargetException ex) {
-                out.print("InvocationTargetException:"+ex.getMessage());
+                Logger.getLogger(FrontServlet.class.getName()).log(Level.SEVERE, null, ex);
             } catch (UrlInconue ex) {
-                out.print("UrlInconue:"+ex.getMessage());
+                out.println("<h1>" + ex.getMessage() + "</h1>");;
+            } catch (InstantiationException ex) {
+                Logger.getLogger(FrontServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
-            out.println("</body>");
-            out.println("</html>");
         }catch(Exception e){
 
-        }*/
+        }
     }
 
 
