@@ -13,9 +13,9 @@ cp -r /home/rado/Bureau/Frameworktest/etu2014 /home/rado/Bureau/Frameworktest/Fr
 cp -r /home/rado/Bureau/Frameworktest/exception /home/rado/Bureau/Frameworktest/Framework/classes/
 jar cvf /home/rado/Bureau/Frameworktest/Framework.jar -C /home/rado/Bureau/Frameworktest/Framework/classes .
 cp /home/rado/Bureau/Frameworktest/Framework.jar /home/rado/Bureau/Frameworktest/Temp/WEB-INF/lib/
-javac -d /home/rado/Bureau/Frameworktest/Temp/WEB-INF/classes/ /home/rado/Bureau/Frameworktest/Test/src/java/test/Dept.java
-javac -d /home/rado/Bureau/Frameworktest/Temp/WEB-INF/classes/ /home/rado/Bureau/Frameworktest/Test/src/java/test/Emp.java
-cd Test
+javac -d /home/rado/Bureau/Frameworktest/Test/WEB-INF/classes/ /home/rado/Bureau/Frameworktest/Test/src/java/test/Dept.java
+javac -d /home/rado/Bureau/Frameworktest/Test/WEB-INF/classes/ /home/rado/Bureau/Frameworktest/Test/src/java/test/Emp.java
+cd Temp
 jar -cvf /home/rado/Bureau/Frameworktest/Test/Test.war *
 cd ../
 cp /home/rado/Bureau/Frameworktest/Test/Test.war /var/lib/tomcat9/webapps

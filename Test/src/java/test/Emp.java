@@ -77,6 +77,17 @@ public class Emp {
         return mv;
     }
     
+    @Url(path="/emp-save")
+    public ModelView getAllEmp(){
+        String view = "emp-all.jsp";
+        ModelView mv = new ModelView(view);
+        Emp vao2 = new Emp(this.getId(),this.getId_dept(),this.getNom(),this.getPrenom(),this.getSalaire());
+        Vector<Emp> liste = this.lists();
+        liste.add(vao2);
+        mv.addItem("employes", liste);
+        return mv;
+    }
+    
     public Vector<Emp> lists(){
         Emp emp = new Emp(1,1,"Rakoto","Jean",200000);
         Emp emp1 = new Emp(2,1,"Randria","Bema",600000);
@@ -84,5 +95,12 @@ public class Emp {
         list.add(emp);
         list.add(emp1);
         return list;
+    }
+    
+    @Url(path="/index")
+    public ModelView saveEmp(){
+        String view = "index.jsp";
+        ModelView mv = new ModelView(view);
+        return mv;
     }
 }
