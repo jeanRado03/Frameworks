@@ -13,8 +13,11 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -110,6 +113,42 @@ public class FrontServlet extends HttpServlet {
         }
     }
 
+    public ModelView save(String url,String[] params,String[] values) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, UrlInconue, InstantiationException{
+        String classname = this.getMappingUrls().get(url).getClassName();
+        String methode = this.getMappingUrls().get(url).getMethod();
+        Class<?> classe = Class.forName(classname);
+        Object objet = classe.newInstance();
+        Field[] fields = classe.getDeclaredFields();
+        String[] allparm = new String[0];
+        for(Field field : fields){
+            for(int i = 0;i < params.length;i++){
+                if(params[i].equals(field.getName())){
+                    Method setobject = classe.getMethod("set"+this.upperFirst(params[i]),field.getType());
+                    Object type = null;
+                    if (field.getType() == String.class) {
+                        type = values[i];
+                    } else if (field.getType() == int.class || field.getType() == Integer.class) {
+                        type = Integer.valueOf(values[i]);
+                    } else if (field.getType() == double.class || field.getType() == Double.class) {
+                        type = Double.valueOf(values[i]);
+                    } else if (field.getType() == boolean.class || field.getType() == Boolean.class) {
+                        type = Boolean.valueOf(values[i]);
+                    }
+                    allparm = Arrays.copyOf(allparm,allparm.length + 1);
+                    allparm[allparm.length - 1] = type.getClass().getName();
+                    setobject.invoke(objet, type);
+                }
+            }
+        }
+        Method method = classe.getDeclaredMethod(methode);
+        ModelView mv = (ModelView)method.invoke(objet);
+        return mv;
+    }
+
+    public String upperFirst(String string) {
+        return string.substring(0, 1).toUpperCase() + string.substring(1);
+    }
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -126,15 +165,31 @@ public class FrontServlet extends HttpServlet {
         ModelView mv;
         try (PrintWriter out = response.getWriter()) {
             try {
-                mv = this.check(url);
-                RequestDispatcher dispatcher = request.getRequestDispatcher(mv.getView());
-                for (Map.Entry<String, Object> entry : mv.getData().entrySet()) {
-                    Object key = entry.getKey();
-                    Object val = entry.getValue();
-                    request.setAttribute("cle",(String)key);
-                    request.setAttribute((String)key,val);
-                }
-                dispatcher.forward(request, response);
+              if (this.getMappingUrls().containsKey(url) && url.contains("save")){
+                  Enumeration<String> parametres = request.getParameterNames();
+                  String[] attributs = new String[0];
+                  String[] values = new String[0];
+                  while(parametres.hasMoreElements()){
+                      String Parametre = parametres.nextElement();
+                      String value = request.getParameter(Parametre);
+                      attributs = Arrays.copyOf(attributs,attributs.length + 1);
+                      attributs[attributs.length - 1] = Parametre;
+                      values = Arrays.copyOf(values,values.length + 1);
+                      values[values.length - 1] = value;
+                      out.println("<h2>" + value + "</h1>");
+                  }
+                  mv = this.save(url,attributs,values);
+              }
+              else mv = this.check(url);
+              out.print("<h3>" + k + "</h3>");
+              RequestDispatcher dispatcher = request.getRequestDispatcher(mv.getView());
+              for (Map.Entry<String, Object> entry : mv.getData().entrySet()) {
+                  Object key = entry.getKey();
+                  Object val = entry.getValue();
+                  request.setAttribute("cle",(String)key);
+                  request.setAttribute((String)key,val);
+              }
+              dispatcher.forward(request, response);
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(FrontServlet.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NoSuchMethodException ex) {
