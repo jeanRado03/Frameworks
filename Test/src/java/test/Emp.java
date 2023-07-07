@@ -146,6 +146,14 @@ public class Emp {
         return mv;
     }
     
+    @Url(path="testsprint")
+    public ModelView testsprint(){
+        String view = "index.jsp";
+        ModelView mv = new ModelView(view,false);
+        mv.addrmSession("sessionProfil");
+        return mv;
+    }
+    
     public Vector<Emp> lists(){
         String[] table1 = new String[2];
         table1[0] = "Gestion";

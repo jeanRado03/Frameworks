@@ -327,6 +327,17 @@ public class FrontServlet extends HttpServlet {
         }
     }
     
+    public void invalidateSession(HttpServletRequest req,ModelView mv){
+        if(mv.isInvalidateSession()){
+            req.getSession().invalidate();
+        }
+        else if(mv.getRemoveSession()!=null){
+            for(String sessionRm : mv.getRemoveSession()){
+                req.getSession().removeAttribute(sessionRm);
+            }
+        }
+    }
+    
     public void checkAuthorisation(Method m, HttpServletRequest req,PrintWriter out) throws Exception {
         if (m.isAnnotationPresent(Authentification.class)) {
             int reference = m.getAnnotation(Authentification.class).reference();
@@ -336,7 +347,7 @@ public class FrontServlet extends HttpServlet {
                 throw new Exception("Vous devriez vous connecter");
             }
             int userProfil = (int) req.getSession().getAttribute(sessionProfil);
-            if (reference > userProfil) {
+            if (reference > userProfil || req.getSession().getAttribute(sessionProfil) != null) {
                 String exceptionMessage = "Vous n'etes pas en mesure d'appeller cette fonction";
                 throw new Exception(exceptionMessage);
             }
@@ -526,6 +537,7 @@ public class FrontServlet extends HttpServlet {
                 if (!mv.getSessions().isEmpty()) {
                     fillSessions(request, mv.getSessions());
                 }
+                invalidateSession(request, mv);
                 if(mv.isIsJson()){
                     Gson gson = new Gson();
                     String jsonString = gson.toJson(mv.getData());
