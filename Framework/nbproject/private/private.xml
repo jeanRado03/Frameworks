@@ -4,8 +4,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/rado/NetBeansProjects/Framework/src/etu2014/framework/servlet/FrontServlet.java</file>
-            <file>file:/home/rado/NetBeansProjects/Framework/src/etu2014/framework/FileUpload.java</file>
-            <file>file:/home/rado/NetBeansProjects/Framework/src/exception/UrlInconue.java</file>
+            <file>file:/home/rado/NetBeansProjects/Framework/src/annotation/Parametre.java</file>
+            <file>file:/home/rado/NetBeansProjects/Framework/src/annotation/Authentification.java</file>
+            <file>file:/home/rado/NetBeansProjects/Framework/src/etu2014/framework/ModelView.java</file>
+            <file>file:/home/rado/NetBeansProjects/Framework/src/annotation/Url.java</file>
+            <file>file:/home/rado/NetBeansProjects/Framework/src/etu2014/framework/myAnnotation/Singleton.java</file>
         </group>
     </open-files>
 </project-private>

@@ -40,7 +40,7 @@ public class Dept {
     @Url(path="/dept-all")
     public ModelView getDept(){
         String view = "dept-all.jsp";
-        ModelView mv = new ModelView(view);
+        ModelView mv = new ModelView(view,false);
         mv.addItem("employes", this.lists());
         return mv;
     }

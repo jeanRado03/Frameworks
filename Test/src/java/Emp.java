@@ -71,7 +71,7 @@ public class Emp {
     @Url(path="/emp-all")
     public ModelView getEmp(){
         String view = "emp-all.jsp";
-        ModelView mv = new ModelView(view);
+        ModelView mv = new ModelView(view,false);
         mv.addItem("employes", this.lists());
         return mv;
     }
