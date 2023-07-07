@@ -13,6 +13,7 @@ import java.util.HashMap;
 public class ModelView {
     String view;
     HashMap<String,Object> data;
+    HashMap<String,Object> sessions;
     boolean isJson;
 
     public String getView() {
@@ -38,15 +39,29 @@ public class ModelView {
     public void setIsJson(boolean isJson) {
         this.isJson = isJson;
     }
+
+    public HashMap<String, Object> getSessions() {
+        return sessions;
+    }
+
+    public void setSessions(HashMap<String, Object> sessions) {
+        this.sessions = sessions;
+    }
     
     public ModelView(String view,boolean json) {
         this.setView(view);
         this.setIsJson(json);
         HashMap<String,Object> data = new HashMap<>();
+        HashMap<String,Object> session = new HashMap<>();
         this.setData(data);
+        this.setSessions(session);
     }
     
     public void addItem(String cle, Object objet){
         this.getData().put(cle, objet);
+    }
+    
+    public void addSession(String cle, Object objet){
+        this.getSessions().put(cle, objet);
     }
 }
