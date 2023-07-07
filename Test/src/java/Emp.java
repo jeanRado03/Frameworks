@@ -3,6 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 import annotation.Url;
+import etu2014.framework.ModelView;
+import java.util.Vector;
 /**
  *
  * @author rado
@@ -62,8 +64,24 @@ public class Emp {
         this.salaire = salaire;
     }
     
-    @Url(path="getAll")
-    public double getAll(){
-        return this.getSalaire()+this.getId();
+    public Emp(){
+        
+    }
+    
+    @Url(path="/emp-all")
+    public ModelView getEmp(){
+        String view = "emp-all.jsp";
+        ModelView mv = new ModelView(view);
+        mv.addItem("employes", this.lists());
+        return mv;
+    }
+    
+    public Vector<Emp> lists(){
+        Emp emp = new Emp(1,1,"Rakoto","Jean",200000);
+        Emp emp1 = new Emp(2,1,"Randria","Bema",600000);
+        Vector<Emp> list = new Vector<>();
+        list.add(emp);
+        list.add(emp1);
+        return list;
     }
 }
