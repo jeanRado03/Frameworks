@@ -26,17 +26,21 @@
                     <th>id_Dept</th>
                     <th>Nom</th>
                     <th>Prenom</th>
+                    <th>Date Naisance</th>
                     <th>Salaire</th>
+                    <th>Details</th>
                 </tr>
             </thead>
             <tbody>
                 <% for (int i = 0; i < employer.size(); i++) { %>
                     <tr>
-                        <td><% employer.get(i).getId(); %></td>
-                        <td><% employer.get(i).getId_dept(); %></td>
-                        <td><% employer.get(i).getNom(); %></td>
-                        <td><% employer.get(i).getPrenom(); %></td>
-                        <td><% employer.get(i).getSalaire(); %></td>
+                        <td><% out.print(((Emp)employer.get(i)).getId()); %></td>
+                        <td><% out.print(((Emp)employer.get(i)).getId_dept()); %></td>
+                        <td><% out.print(((Emp)employer.get(i)).getNom()); %></td>
+                        <td><% out.print(((Emp)employer.get(i)).getPrenom()); %></td>
+                        <td><% out.print(((Emp)employer.get(i)).getDateNaissance()); %></td>
+                        <td><% out.print(((Emp)employer.get(i)).getSalaire()); %></td>
+                        <td><a href="emp-details?id=<% out.print(((Emp)employer.get(i)).getId());%>">details</a></td>
                     </tr>
                 <% } %>
             </tbody>

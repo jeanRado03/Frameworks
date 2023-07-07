@@ -38,7 +38,7 @@ public class Dept {
     public Dept() {
     }
     
-    @Url(path="/dept-all")
+    @Url(path="dept-all")
     public ModelView getDept(){
         String view = "dept-all.jsp";
         ModelView mv = new ModelView(view);

@@ -1,21 +1,28 @@
-#/home/rado/Bureau/Frameworktest/Framework/src/annotation
-#/home/rado/Bureau/Frameworktest/Framework/src/etu2014/framework
-#/home/rado/Bureau/Frameworktest/Framework/src/etu2014/framework/servlet
-#/home/rado/Bureau/Frameworktest/Framework/src/exception
-
-javac -d . /home/rado/Bureau/Frameworktest/Framework/Url.java
-javac -d . /home/rado/Bureau/Frameworktest/Framework/Mapping.java
-javac -d . /home/rado/Bureau/Frameworktest/Framework/ModelView.java
-javac -d . /home/rado/Bureau/Frameworktest/Framework/UrlInconue.java
-javac -d . /home/rado/Bureau/Frameworktest/Framework/FrontServlet.java
-cp -r /home/rado/Bureau/Frameworktest/annotation /home/rado/Bureau/Frameworktest/Framework/classes/
-cp -r /home/rado/Bureau/Frameworktest/etu2014 /home/rado/Bureau/Frameworktest/Framework/classes/
-cp -r /home/rado/Bureau/Frameworktest/exception /home/rado/Bureau/Frameworktest/Framework/classes/
-jar cvf /home/rado/Bureau/Frameworktest/Framework.jar -C /home/rado/Bureau/Frameworktest/Framework/classes .
-cp /home/rado/Bureau/Frameworktest/Framework.jar /home/rado/Bureau/Frameworktest/Temp/WEB-INF/lib/
-javac -d /home/rado/Bureau/Frameworktest/Test/WEB-INF/classes/ /home/rado/Bureau/Frameworktest/Test/src/java/test/Dept.java
-javac -d /home/rado/Bureau/Frameworktest/Test/WEB-INF/classes/ /home/rado/Bureau/Frameworktest/Test/src/java/test/Emp.java
+cheminFramework='/home/rado/Bureau/Frameworktest/Framework/'
+cheminFrameworktest='/home/rado/Bureau/Frameworktest/'
+cheminTest='/home/rado/Bureau/Test/'
+echo $cheminFramework'Rado'
+#PARTIE 1
+javac -d . $cheminFramework'Url.java'
+javac -d . $cheminFramework'Parametre.java'
+javac -d . $cheminFramework'Mapping.java'
+javac -d . $cheminFramework'ModelView.java'
+javac -d . $cheminFramework'UrlInconue.java'
+javac -d . $cheminFramework'FrontServlet.java'
+cp -r $cheminFrameworktest'annotation' $cheminFramework'classes/'
+cp -r $cheminFrameworktest'etu2014' $cheminFrameworktest'classes/'
+cp -r $cheminFrameworktest'exception' $cheminFrameworktest'classes/'
+jar cvf $cheminTest'WEB-INF/lib/Framework.jar' -C $cheminFramework'classes' .
+#PARTIE 2
+mkdir Temp
+mkdir -p Temp/WEB-INF Temp/WEB-INF/classes Temp/WEB-INF/lib
+cp $cheminTest'WEB-INF/web.xml' $cheminFrameworktest'Temp/WEB-INF/'
+cp $cheminTest*.jsp $cheminFrameworktest'Temp/'
+cp $cheminTest'WEB-INF/lib/Framework.jar' $cheminFrameworktest'Temp/WEB-INF/lib/'
+javac -d $cheminFrameworktest'Temp/WEB-INF/classes/' $cheminTest'src/java/test/Dept.java'
+javac -d $cheminFrameworktest'Temp/WEB-INF/classes/' $cheminTest'src/java/test/Emp.java'
 cd Temp
-jar -cvf /home/rado/Bureau/Frameworktest/Test/Test.war *
+jar -cvf $cheminFrameworktest'Temp/Temp.war' *
 cd ../
-cp /home/rado/Bureau/Frameworktest/Test/Test.war /var/lib/tomcat9/webapps
+cp $cheminFrameworktest'Temp/Temp.war' /var/lib/tomcat9/webapps
+rm -R Temp

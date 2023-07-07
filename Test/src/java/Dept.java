@@ -2,9 +2,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 import annotation.Url;
 import etu2014.framework.ModelView;
+import java.util.Vector;
 /**
  *
  * @author rado
@@ -41,6 +41,16 @@ public class Dept {
     public ModelView getDept(){
         String view = "dept-all.jsp";
         ModelView mv = new ModelView(view);
+        mv.addItem("employes", this.lists());
         return mv;
+    }
+    
+    public Vector<Dept> lists(){
+        Dept dept = new Dept(1,"Secretariat");
+        Dept dept1 = new Dept(2,"Compta");
+        Vector<Dept> list = new Vector<>();
+        list.add(dept);
+        list.add(dept1);
+        return list;
     }
 }
