@@ -5,6 +5,7 @@
 package test;
 import annotation.Authentification;
 import annotation.Parametre;
+import annotation.ResteAPI;
 import annotation.Url;
 import etu2014.framework.FileUpload;
 import etu2014.framework.ModelView;
@@ -158,6 +159,16 @@ public class Emp {
         list.add(emp);
         list.add(emp1);
         return list;
+    }
+    
+    @ResteAPI(isresteApi = true)
+    @Url(path="resteapi")
+    public Emp[] liste(){
+        Emp[] emp = new Emp[this.lists().size()];
+        for (int i = 0; i < emp.length; i++) {
+            emp[i] = this.lists().get(i);
+        }
+        return emp;
     }
     
     /*@Url(path="index")

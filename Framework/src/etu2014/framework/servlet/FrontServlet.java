@@ -7,6 +7,7 @@ package etu2014.framework.servlet;
 import annotation.Authentification;
 import annotation.Url;
 import annotation.Parametre;
+import annotation.ResteAPI;
 import com.google.gson.Gson;
 import etu2014.framework.myAnnotation.Singleton;
 import etu2014.framework.FileUpload;
@@ -367,6 +368,31 @@ public class FrontServlet extends HttpServlet {
         return parts[parts.length - 1];
     }
     
+    public void objectTojson(String url, PrintWriter out) throws ClassNotFoundException, InstantiationException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, UrlInconue{
+        if(this.getMappingUrls().containsKey(url)){
+            String classname = this.getMappingUrls().get(url).getClassName();
+            String methode = this.getMappingUrls().get(url).getMethod();
+            Class<?> classe = Class.forName(classname);
+            Method method = classe.getDeclaredMethod(methode);
+            if(checkresteAPI(method)){
+                Object objet = classe.newInstance();
+                Object mv = method.invoke(objet);
+                Gson gson = new Gson();
+                String jsonString = gson.toJson(mv);
+                out.print(jsonString);
+            }else{
+                return;
+            }
+        }else{
+            throw new UrlInconue();
+        }
+    }
+    
+    boolean checkresteAPI(Method m){
+        if(m.isAnnotationPresent(ResteAPI.class))return true;
+        return false;
+    }
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -384,6 +410,7 @@ public class FrontServlet extends HttpServlet {
         int k = 0;
         try (PrintWriter out = response.getWriter()) {
             try {
+                objectTojson(url, out);
                 if (this.getMappingUrls().containsKey(url) && url.contains("save") || url.contains("login")){
                     Enumeration<String> parametres = request.getParameterNames();
                     String[] attributs = new String[0];
