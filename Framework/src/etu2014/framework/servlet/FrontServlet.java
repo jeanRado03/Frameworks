@@ -188,17 +188,29 @@ public class FrontServlet extends HttpServlet {
         }
     }
     
-    public ModelView check(String url,PrintWriter out , HttpServletRequest req) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, UrlInconue, InstantiationException{
+    public ModelView check(String url,String[] params,String[] values,String[] checkBox,FileUpload fup,PrintWriter out, HttpServletRequest req) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, UrlInconue, InstantiationException{
         if(this.getMappingUrls().containsKey(url)){
             String classname = this.getMappingUrls().get(url).getClassName();
             String methode = this.getMappingUrls().get(url).getMethod();
             Class<?> classe = Class.forName(classname);
-            Method method = classe.getDeclaredMethod(methode);
+            //Method method = classe.getDeclaredMethod(methode);
+            Method[] methods = classe.getDeclaredMethods();
+            Method method = null;
+            for (Method metod : methods){
+                if(metod.getName() == methode)method = metod; 
+            }
+            out.print(method.getName());
             ModelView mv = null;
             try {
                 checkAuthorisation(method, req, out);
-                Object objet = classe.newInstance();
-                mv = (ModelView)method.invoke(objet);
+                Object objet = getInClassInstance(classname, classe);
+                if(checkParameter(method)){
+                    return det(objet,method,params,values,out,req);
+                }else if(url.contains("save") || url.contains("login")){
+                    return save(objet,classe,method,params,values,checkBox,fup,out,req);
+                }else{
+                    mv = (ModelView)method.invoke(objet);
+                }
             } catch (Exception ex) {
                 out.print(ex.getMessage());
             }
@@ -206,6 +218,16 @@ public class FrontServlet extends HttpServlet {
         }else{
             throw new UrlInconue();
         }
+    }
+    
+    public boolean checkParameter(Method methode){
+        Parameter[] parameters = methode.getParameters();
+        int test = 0;
+        for(Parameter param : parameters){
+            test += 1;
+        }
+        if(test > 0)return true;
+        return false;
     }
     
     public Object getInClassInstance(String classname, Class<?> classe) throws InstantiationException, IllegalAccessException, NoSuchMethodException, IllegalArgumentException, InvocationTargetException{
@@ -228,18 +250,7 @@ public class FrontServlet extends HttpServlet {
         return objet;
     }
     
-    public ModelView det(String url,String[] params,String[] values,PrintWriter out, HttpServletRequest req) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, UrlInconue, InstantiationException{
-        String classname = this.getMappingUrls().get(url).getClassName();
-        String methode = this.getMappingUrls().get(url).getMethod();
-        Class<?> classe = Class.forName(classname);
-        //Object objet = classe.newInstance();
-        Object objet = getInClassInstance(classname, classe);
-        Method method = classe.getDeclaredMethod(methode, Integer.class);
-        try {
-            checkAuthorisation(method, req, out);
-        } catch (Exception ex) {
-            out.print(ex.getMessage());
-        }
+    public ModelView det(Object objet, Method method,String[] params,String[] values,PrintWriter out, HttpServletRequest req) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, UrlInconue, InstantiationException{
         Parameter[] de = method.getParameters();
         Object[] type = new Object[de.length];
         for(Parameter param : de){
@@ -266,13 +277,7 @@ public class FrontServlet extends HttpServlet {
         return mv;
     }
     
-    public ModelView save(String url,String[] params,String[] values,String[] checkBox,FileUpload fup,PrintWriter out, HttpServletRequest req) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, UrlInconue, InstantiationException{
-        String classname = this.getMappingUrls().get(url).getClassName();
-        out.print("1");
-        String methode = this.getMappingUrls().get(url).getMethod();
-        Class<?> classe = Class.forName(classname);
-        //Object objet = classe.newInstance();
-        Object objet = getInClassInstance(classname, classe);
+    public ModelView save(Object objet,Class<?> classe,Method method,String[] params,String[] values,String[] checkBox,FileUpload fup,PrintWriter out, HttpServletRequest req) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, UrlInconue, InstantiationException{
         Field[] fields = classe.getDeclaredFields();
         String[] allparm = new String[0];
         out.println("ATOOOOOOOOO");
@@ -309,12 +314,6 @@ public class FrontServlet extends HttpServlet {
                 }
             }
         }
-        Method method = classe.getDeclaredMethod(methode);
-        try {
-            checkAuthorisation(method, req, out);
-        }catch(Exception ex){
-            out.print(ex.getMessage());
-        }
         ModelView mv = (ModelView)method.invoke(objet);  
         return mv;
     }
@@ -346,8 +345,11 @@ public class FrontServlet extends HttpServlet {
             if (req.getSession().getAttribute(sessionProfilName) == null) {
                 throw new Exception("Vous devriez vous connecter");
             }
-            int userProfil = (int) req.getSession().getAttribute(sessionProfil);
-            if (reference > userProfil || req.getSession().getAttribute(sessionProfil) != null) {
+            int userProfil = 0;
+            if(req.getSession().getAttribute(sessionProfil) != null){
+                userProfil = (int) req.getSession().getAttribute(sessionProfil);
+            }
+            if (reference > userProfil) {
                 String exceptionMessage = "Vous n'etes pas en mesure d'appeller cette fonction";
                 throw new Exception(exceptionMessage);
             }
@@ -384,7 +386,11 @@ public class FrontServlet extends HttpServlet {
             String classname = this.getMappingUrls().get(url).getClassName();
             String methode = this.getMappingUrls().get(url).getMethod();
             Class<?> classe = Class.forName(classname);
-            Method method = classe.getDeclaredMethod(methode);
+            Method[] methods = classe.getDeclaredMethods();
+            Method method = null;
+            for (Method metod : methods){
+                if(metod.getName() == methode)method = metod; 
+            }
             if(checkresteAPI(method)){
                 Object objet = classe.newInstance();
                 Object mv = method.invoke(objet);
@@ -398,6 +404,9 @@ public class FrontServlet extends HttpServlet {
             throw new UrlInconue();
         }
     }
+    
+    public
+            
     
     boolean checkresteAPI(Method m){
         if(m.isAnnotationPresent(ResteAPI.class))return true;
@@ -422,7 +431,7 @@ public class FrontServlet extends HttpServlet {
         try (PrintWriter out = response.getWriter()) {
             try {
                 objectTojson(url, out);
-                if (this.getMappingUrls().containsKey(url) && url.contains("save") || url.contains("login")){
+                //if (this.getMappingUrls().containsKey(url) && url.contains("save") || url.contains("login")){
                     Enumeration<String> parametres = request.getParameterNames();
                     String[] attributs = new String[0];
                     String[] values = new String[0];
@@ -513,10 +522,8 @@ public class FrontServlet extends HttpServlet {
                             values[values.length - 1] = value;   
                         }
                     }
-                    out.print("Atoo");
-                    mv = this.save(url,attributs,values,forCheckBox,upload,out,request);
-                    out.print("Tafiditra ato ambany");
-                }else if (this.getMappingUrls().containsKey(url) && url.contains("details")){
+                    mv = this.check(url,attributs,values,forCheckBox,upload,out,request);
+                /*}else if (this.getMappingUrls().containsKey(url) && url.contains("details")){
                     Enumeration<String> parametres = request.getParameterNames();
                     String[] attributs = new String[0];
                     String[] values = new String[0];
@@ -533,7 +540,7 @@ public class FrontServlet extends HttpServlet {
                     mv = this.det(url, attributs, values, out, request);
                     out.println(mv.getView());
                 }
-                else mv = this.check(url, out, request);
+                else mv = this.check(url, out, request);*/
                 if (!mv.getSessions().isEmpty()) {
                     fillSessions(request, mv.getSessions());
                 }
