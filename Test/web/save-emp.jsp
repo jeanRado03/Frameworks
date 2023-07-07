@@ -30,7 +30,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
             <input type="checkbox" name="check" value="Compta"><br/>
             <label for="uploadFichier">Import Fichier</label>
             <input type="file" name="uploadFichier"><br/>
-            <input type="submit" value="Save">
+            <input type="submit" value="Save"><br/>
         </form>
+        <a href="logout"><input type="button" value="Button"></a>
     </body>
 </html>
