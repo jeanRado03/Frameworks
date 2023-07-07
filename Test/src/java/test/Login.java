@@ -51,4 +51,12 @@ public class Login {
         }
         return mv;
     }
+    
+    @Url(path="logout")
+    public ModelView logout(){
+        String view = "index.jsp";
+        ModelView mv = new ModelView(view,false);
+        mv.setInvalidateSession(true);
+        return mv;
+    }
 }

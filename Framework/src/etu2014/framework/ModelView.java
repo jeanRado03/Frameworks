@@ -4,7 +4,9 @@
  */
 package etu2014.framework;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -15,6 +17,8 @@ public class ModelView {
     HashMap<String,Object> data;
     HashMap<String,Object> sessions;
     boolean isJson;
+    boolean invalidateSession = false;
+    List<String> removeSession;
 
     public String getView() {
         return view;
@@ -47,14 +51,32 @@ public class ModelView {
     public void setSessions(HashMap<String, Object> sessions) {
         this.sessions = sessions;
     }
+
+    public boolean isInvalidateSession() {
+        return invalidateSession;
+    }
+
+    public void setInvalidateSession(boolean invalidateSession) {
+        this.invalidateSession = invalidateSession;
+    }
+
+    public List<String> getRemoveSession() {
+        return removeSession;
+    }
+
+    public void setRemoveSession(List<String> removeSession) {
+        this.removeSession = removeSession;
+    }
     
     public ModelView(String view,boolean json) {
         this.setView(view);
         this.setIsJson(json);
         HashMap<String,Object> data = new HashMap<>();
         HashMap<String,Object> session = new HashMap<>();
+        ArrayList<String> rmsession = new ArrayList<>();
         this.setData(data);
         this.setSessions(session);
+        this.setRemoveSession(rmsession);
     }
     
     public void addItem(String cle, Object objet){
@@ -63,5 +85,9 @@ public class ModelView {
     
     public void addSession(String cle, Object objet){
         this.getSessions().put(cle, objet);
+    }
+    
+    public void addrmSession(String sessionName){
+        this.getRemoveSession().add(sessionName);
     }
 }
