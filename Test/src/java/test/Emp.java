@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package test;
-import annotation.Authentification;
 import annotation.Parametre;
 import annotation.Url;
 import etu2014.framework.FileUpload;
@@ -24,7 +23,6 @@ public class Emp {
     String prenom;
     String[] check;
     double salaire;
-    
     Date dateNaissance;
     FileUpload uploadFichier;
 
@@ -106,7 +104,6 @@ public class Emp {
         
     }
     
-    @Authentification(value = "admin",reference = 11)
     @Url(path="emp-all")
     public ModelView getEmp(){
         String view = "emp-all.jsp";
@@ -115,7 +112,6 @@ public class Emp {
         return mv;
     }
     
-    @Authentification(value = "",reference = 1)
     @Url(path="emp-save")
     public ModelView getAllEmp(){
         String view = "emp-all.jsp";
@@ -130,7 +126,6 @@ public class Emp {
         return mv;
     }
     
-    @Authentification(value = "admin", reference = 11)
     @Url(path="emp-details")
     public ModelView FindbyId(@Parametre(name = "id") Integer id){
         String view = "emp-details.jsp";
@@ -160,10 +155,10 @@ public class Emp {
         return list;
     }
     
-    /*@Url(path="index")
+    @Url(path="index")
     public ModelView saveEmp(){
         String view = "index.jsp";
         ModelView mv = new ModelView(view,false);
         return mv;
-    }*/
+    }
 }
